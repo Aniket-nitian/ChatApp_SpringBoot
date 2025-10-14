@@ -1,12 +1,11 @@
-import React from "react";
 import { Route, Routes } from "react-router";
-import App from "../components/App";
 import Chat from "../components/Chat";
+import JoinCreateChat from "../components/JoinCreateChat";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<JoinCreateChat />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/*" element={<h1> 404 Not Find</h1>} />
     </Routes>
