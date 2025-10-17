@@ -42,12 +42,12 @@ const Chat = () => {
           <div
             key={index}
             className={`flex ${
-              msg.sender === "User" ? "justify-end" : "justify-start"
+              msg.sender === "Alice" ? "justify-end" : "justify-start"
             }`}
           >
             <div
               className={`flex max-w-lg p-3 rounded-xl shadow-md ${
-                msg.sender === "User"
+                msg.sender === "Alice"
                   ? "bg-blue-500 text-white ml-10 flex-row-reverse"
                   : "bg-gray-700 text-white mr-10"
               } items-start`}
