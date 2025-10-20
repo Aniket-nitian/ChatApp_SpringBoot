@@ -3,10 +3,13 @@ import { BrowserRouter } from "react-router";
 import "./index.css";
 import AppRoutes from "./config/AppRoutes.jsx";
 import { Toaster } from "react-hot-toast";
+import { ChatProvider } from "./context/ChatContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Toaster position="top-center" />
-    <AppRoutes />
+    <ChatProvider>
+      <AppRoutes />
+    </ChatProvider>
   </BrowserRouter>
 );

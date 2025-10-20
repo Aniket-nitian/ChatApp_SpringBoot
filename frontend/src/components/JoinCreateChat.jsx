@@ -2,9 +2,21 @@ import React, { useState } from "react";
 import chatIcon from "../assets/chat (1).png";
 import { toast } from "react-hot-toast";
 import { createRoom } from "../services/RoomService.jsx";
+import useChatContext from "../context/ChatContext.jsx";
+import { useNavigate } from "react-router";
 
 const JoinCreateChat = () => {
   const [details, setDetails] = useState({ roomId: "", userName: "" });
+  const {
+    roomId,
+    currentUser,
+    connected,
+    setRoomId,
+    setCurrentUser,
+    setConnected,
+  } = useChatContext();
+
+  const navigate = useNavigate();
 
   function handleFormInputChange(event) {
     setDetails({
@@ -23,7 +35,6 @@ const JoinCreateChat = () => {
 
   function joinChat() {
     if (validateForm()) {
-      // Proceed to join the chat room
     }
   }
   async function create() {
@@ -33,6 +44,11 @@ const JoinCreateChat = () => {
         const response = await createRoom(details.roomId);
         console.log("Room created:", response);
         toast.success("Room created successfully");
+        setCurrentUser(details.userName);
+        setRoomId(response.roomId);
+        setConnected(true);
+        //forward to chat page
+        navigate("/chat");
       } catch (error) {
         console.error("Error creating room:", error);
         toast.error("Error creating room");
@@ -46,9 +62,7 @@ const JoinCreateChat = () => {
         <div>
           <img src={chatIcon} alt="chatIcon" className="w-24 mx-auto" />
         </div>
-        <h1 className="text-2xl font-bold font-semibold text-center">
-          Join/Create Room
-        </h1>
+        <h1 className="text-2xl font-bold text-center">Join/Create Room</h1>
         <div>
           <label htmlFor="name" className="block font-medium mb-2">
             YourName
