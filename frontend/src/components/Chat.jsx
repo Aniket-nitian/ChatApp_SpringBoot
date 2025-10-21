@@ -1,24 +1,20 @@
 import { Send, Paperclip } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import useChatContext from "../context/ChatContext";
+import { useNavigate } from "react-router";
 
 const Chat = () => {
+  const { roomId, currentUser, connected } = useChatContext();
+
+  const nabvigate = useNavigate();
+  useEffect(() => {
+    if (!connected) {
+      nabvigate("/");
+    }
+  }, [connected, roomId, currentUser]);
   const [messages, setMessages] = useState([
     { sender: "Alice", content: "Hello everyone!" },
     { sender: "Bob", content: "Hi Alice!" },
-    { sender: "Charlie", content: "Good to see you both." },
-    { sender: "Alice", content: "How's everyone doing?" },
-    { sender: "Bob", content: "Doing great, thanks!" },
-    { sender: "Charlie", content: "Same here!" },
-    { sender: "Alice", content: "What are you guys up to?" },
-    { sender: "Bob", content: "Just working on a project." },
-    { sender: "Charlie", content: "Thinking about going for a walk later." },
-    { sender: "Alice", content: "Sounds fun!" },
-    { sender: "Bob", content: "Maybe I'll join you." },
-    { sender: "Charlie", content: "The more the merrier!" },
-    { sender: "Alice", content: "Let's decide on a time." },
-    { sender: "Bob", content: "How about 5 PM?" },
-    { sender: "Charlie", content: "Works for me!" },
-    { sender: "Alice", content: "Perfect, see you then!" },
   ]);
   const [input, setInput] = useState("");
   const [stompClient, setStompClient] = useState(null);

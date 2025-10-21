@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import chatIcon from "../assets/chat (1).png";
 import { toast } from "react-hot-toast";
-import { createRoom } from "../services/RoomService.jsx";
+import { createRoom, joinRoom } from "../services/RoomService.jsx";
 import useChatContext from "../context/ChatContext.jsx";
 import { useNavigate } from "react-router";
 
@@ -33,8 +33,23 @@ const JoinCreateChat = () => {
     return true;
   }
 
-  function joinChat() {
+  async function joinChat() {
     if (validateForm()) {
+      try {
+        const room = await joinRoom(details.roomId);
+        toast.success("Joined room successfully");
+        setCurrentUser(details.userName);
+        setRoomId(room.roomId);
+        setConnected(true);
+        navigate("/chat");
+      } catch (error) {
+        if (error.status == 400) {
+          toast.error(error.response.data);
+        } else {
+          toast.error("Error joining room");
+        }
+        console.error("Error joining room:", error);
+      }
     }
   }
   async function create() {

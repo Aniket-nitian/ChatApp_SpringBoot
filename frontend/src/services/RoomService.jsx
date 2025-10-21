@@ -10,10 +10,10 @@ export const createRoom = async (roomDetail) => {
   }
 };
 
-export const joinRoom = async (roomId, userName) => {
+export const joinRoom = async (roomId) => {
   try {
-    const response = await Axios.post("/rooms/join", { roomId, userName }); // Adjust endpoint as needed
-    return response.data; // Assuming the response contains room details
+    const response = await Axios.get(`/api/v1/rooms/${roomId}`);
+    return response.data;
   } catch (error) {
     console.error("Error joining room:", error);
     throw error;
