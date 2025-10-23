@@ -2,16 +2,13 @@ import { Send, Paperclip } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useChatContext from "../context/ChatContext";
 import { useNavigate } from "react-router";
+import { baseURL } from "../config/AxiosHelper";
+import toast from "react-hot-toast";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
 const Chat = () => {
   const { roomId, currentUser, connected } = useChatContext();
-
-  const nabvigate = useNavigate();
-  useEffect(() => {
-    if (!connected) {
-      nabvigate("/");
-    }
-  }, [connected, roomId, currentUser]);
   const [messages, setMessages] = useState([
     { sender: "Alice", content: "Hello everyone!" },
     { sender: "Bob", content: "Hi Alice!" },
@@ -20,6 +17,33 @@ const Chat = () => {
   const [stompClient, setStompClient] = useState(null);
   const inputRef = useRef(null);
   const chatBoxRef = useRef(null);
+
+  const nabvigate = useNavigate();
+  useEffect(() => {
+    if (!connected) {
+      nabvigate("/");
+    }
+  }, [connected, roomId, currentUser]);
+
+  //page init
+
+  //message loading
+  //stompClient setup
+  useEffect(() => {
+    const connectWebSocket = () => {
+      const socket = new SockJS(`${baseURL}/chat`);
+      const client = Stomp.over(socket);
+      client.connect({}, () => {
+        setStompClient(client);
+        toast.success("Connected to chat server");
+        client.subscribe(`/topic/room/${roomId}`, (message) => {
+          const receivedMessage = JSON.parse(message.body);
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+        });
+      });
+    };
+    connectWebSocket();
+  }, [roomId]);
 
   return (
     <div className="dark:bg-gray-900 h-screen flex flex-col overflow-hidden">
